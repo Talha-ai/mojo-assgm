@@ -23,15 +23,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const sessionConfig = {
-  secret: process.env.SESSION_SECRET || "secret", 
+  secret: "secret",
   resave: false,
-  saveUninitialized: false, 
-  cookie: {
-    maxAge: 24 * 60 * 60 * 1000, 
-    httpOnly: true,
-    secure: process.env.NODE_ENV === 'production', 
-    sameSite: 'lax', 
-  },
+  saveUninitialized: false,
 };
 
 
