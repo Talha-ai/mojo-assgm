@@ -66,6 +66,13 @@ const Home = () => {
 
   if (!user) return <CircularProgress />;
 
+  const isLoading =
+    followers.isLoading ||
+    engagement.isLoading ||
+    impressions.isLoading ||
+    reactions.isLoading ||
+    pageName.isLoading;
+
   return (
     <Box display="flex" flexDirection="column" minHeight="100vh">
       <Navbar />
@@ -79,7 +86,7 @@ const Home = () => {
         </Header>
 
         <Select
-          value={pageName?.data?.name}
+          value={pageName?.data?.name || ''}
           onChange={handlePageChange}
           displayEmpty
           inputProps={{ 'aria-label': 'Select Page' }}
@@ -123,10 +130,7 @@ const Home = () => {
 
         {selectedPage && (
           <div>
-            {followers.isLoading ||
-            engagement.isLoading ||
-            impressions.isLoading ||
-            reactions.isLoading ? (
+            {isLoading ? (
               <Box display="flex" justifyContent="center" mt={4}>
                 <CircularProgress />
               </Box>

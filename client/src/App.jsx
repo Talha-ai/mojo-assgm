@@ -1,6 +1,7 @@
 import Home from './components/Home';
 import LoginPage from './components/LoginPage';
 import { createBrowserRouter, Outlet } from 'react-router-dom';
+import RequireAuth from './hooks/requireAuth';
 
 function App() {
   return (
@@ -15,7 +16,14 @@ const appRouter = createBrowserRouter([
     path: '/',
     element: <App />,
     children: [
-      { path: '/', element: <Home /> },
+      {
+        path: '/',
+        element: (
+          <RequireAuth>
+            <Home />
+          </RequireAuth>
+        ),
+      },
       {
         path: '/login',
         element: <LoginPage />,
