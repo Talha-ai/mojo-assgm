@@ -6,7 +6,6 @@ const useUser = () => {
       `${import.meta.env.VITE_BACKEND_URL}/auth/login/success`,
       {
         method: "GET",
-        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
