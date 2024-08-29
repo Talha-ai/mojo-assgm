@@ -22,7 +22,7 @@ const useUser = () => {
   const { data: user, isLoading, isError } = useQuery({
     queryKey: ["user"],
     queryFn: getUser,
-    retry: false,
+    retry: 2,
     staleTime: 0,
     gcTime: 0,
   });
