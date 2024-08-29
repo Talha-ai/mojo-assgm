@@ -9,7 +9,7 @@ const Navbar = () => {
 
   const handleLogout = async () => {
     try {
-      await axios.post('/auth/logout');
+      await axios.post(`${import.meta.env.VITE_BACKEND_URL}/auth/logout`);
 
       queryClient.resetQueries({ queryKey: ['user'], exact: true });
 
