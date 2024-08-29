@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const passport = require("passport");
+require('dotenv').config();
 
 router.get("/login/success", (req, res) => {
   console.log('called', req.user)
