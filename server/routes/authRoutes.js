@@ -44,7 +44,7 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: "/login/failed",
-    successRedirect: process.env.CLIENT_URL,
+    successRedirect: "https://mojo-assgm.vercel.app",
   }),
 );
 
