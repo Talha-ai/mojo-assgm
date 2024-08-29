@@ -23,16 +23,17 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const sessionConfig = {
-  secret: process.env.SESSION_SECRET || "secret",
+  secret: process.env.SESSION_SECRET || "secret", 
   resave: false,
-  saveUninitialized: false,
+  saveUninitialized: false, 
   cookie: {
-    maxAge: 24 * 60 * 60 * 1000,
+    maxAge: 24 * 60 * 60 * 1000, 
     httpOnly: true,
-    secure: process.env.NODE_ENV === 'production',
-    sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
+    secure: process.env.NODE_ENV === 'production', 
+    sameSite: 'lax', 
   },
 };
+
 
 
 app.use(session(sessionConfig));
