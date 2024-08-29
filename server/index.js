@@ -12,7 +12,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: process.env.CLIENT_URL,
+    origin: "https://mojo-assgm.vercel.app",
     credentials: true,
     methods: "GET,HEAD,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],
@@ -27,8 +27,6 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: false,
 };
-
-
 
 app.use(session(sessionConfig));
 
