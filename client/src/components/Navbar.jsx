@@ -1,7 +1,7 @@
 import { AppBar, Toolbar, Typography, Button, Box } from '@mui/material';
 import { useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'; // Import axios
+import axios from 'axios';
 
 const Navbar = () => {
   const queryClient = useQueryClient();
