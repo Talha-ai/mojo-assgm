@@ -12,7 +12,7 @@ connectDB();
 
 app.use(
   cors({
-    origin: "https://mojo-assgm.vercel.app",
+    origin: "http://localhost:5173",
     credentials: true,
     methods: "GET,HEAD,POST,PUT,DELETE,OPTIONS",
     allowedHeaders: ["Content-Type", "Authorization"],

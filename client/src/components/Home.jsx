@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import useUser from '../hooks/useUser';
 import usePageInsights from '../hooks/usePageInsights';
 import {
@@ -17,6 +17,7 @@ import {
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { styled } from '@mui/system';
+import axios from 'axios';
 
 const Header = styled(Box)(({ theme }) => ({
   marginBottom: theme.spacing(3),
@@ -45,11 +46,44 @@ const Home = () => {
   );
   const [since, setSince] = useState('2024-08-20');
   const [until, setUntil] = useState('2024-08-30');
+  const [pageAccessToken, setPageAccessToken] = useState(null);
 
-  const accessToken = import.meta.env.VITE_ACCESS_TOKEN;
+  const accessToken = user?.facebookAccessToken;
+
+  useEffect(() => {
+    const fetchPageAccessToken = async () => {
+      if (accessToken) {
+        try {
+          const response = await axios.get(
+            `https://graph.facebook.com/v20.0/me/accounts`,
+            {
+              params: {
+                access_token: accessToken,
+              },
+            }
+          );
+
+          const pages = response.data.data;
+          console.log(pages);
+          const page = pages.find((p) => p.id === selectedPage);
+          console.log(page);
+
+          if (page) {
+            setPageAccessToken(page.access_token);
+          } else {
+            console.error('Page not found or insufficient permissions');
+          }
+        } catch (error) {
+          console.error('Error fetching page access token:', error);
+        }
+      }
+    };
+
+    fetchPageAccessToken();
+  }, [accessToken, selectedPage]);
 
   const { followers, engagement, impressions, reactions, pageName, isError } =
-    usePageInsights(selectedPage, accessToken, since, until);
+    usePageInsights(selectedPage, pageAccessToken, since, until);
 
   const handlePageChange = (event) => {
     setSelectedPage(event.target.value);

@@ -9,6 +9,7 @@ const userSchema = new Schema({
   email: { type: String, unique: true },
   password: { type: String, minlength: 8 },
   facebookId: { type: String },
+  facebookAccessToken: { type: String },
   verified: { type: Boolean },
 });
 

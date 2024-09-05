@@ -1,17 +1,33 @@
 const FacebookStrategy = require('passport-facebook').Strategy;
 const User = require("./models/userModel");
 const passport = require("passport");
+const axios = require("axios")
 
 passport.use(new FacebookStrategy({
   clientID: process.env.FACEBOOK_CLIENT_ID,
   clientSecret: process.env.FACEBOOK_CLIENT_SECRET,
   callbackURL: `${process.env.SERVER_URL}/auth/facebook/callback`,
-  profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email']
-
+  authorizationURL: `https://www.facebook.com/v3.2/dialog/oauth?config_id=875813711114836`, // Add config_id here
+  tokenURL: 'https://graph.facebook.com/v3.2/oauth/access_token',
+  profileFields: ['id', 'displayName', 'name', 'gender', 'picture.type(large)', 'email'],
+  scope: ['email', 'public_profile'],
 },
   async function (accessToken, refreshToken, profile, done) {
     try {
+      // Exchange short-lived token for long-lived token
+      const response = await axios.get(`https://graph.facebook.com/v20.0/oauth/access_token`, {
+        params: {
+          grant_type: 'fb_exchange_token',
+          client_id: process.env.FACEBOOK_CLIENT_ID,
+          client_secret: process.env.FACEBOOK_CLIENT_SECRET,
+          fb_exchange_token: accessToken,
+        },
+      });
+      const longLivedAccessToken = response.data.access_token;
+
+      // Find or create the user
       let user = await User.findOne({ email: profile.emails[0].value });
+
       if (user) {
         let needsUpdate = false;
         if (user.facebookId !== profile.id) {
@@ -20,6 +36,10 @@ passport.use(new FacebookStrategy({
         }
         if (!user.pfp) {
           user.pfp = profile.photos[0].value;
+          needsUpdate = true;
+        }
+        if (user.facebookAccessToken !== longLivedAccessToken) {
+          user.facebookAccessToken = longLivedAccessToken;
           needsUpdate = true;
         }
         if (needsUpdate) {
@@ -31,7 +51,8 @@ passport.use(new FacebookStrategy({
           username: profile.displayName.replace(/\s+/g, ''),
           pfp: profile.photos[0].value,
           email: profile.emails[0].value,
-          verified: true
+          verified: true,
+          facebookAccessToken: longLivedAccessToken
         });
         await user.save();
       }
@@ -39,7 +60,9 @@ passport.use(new FacebookStrategy({
     } catch (error) {
       done(error);
     }
-  }));
+  }
+));
+
 
 passport.serializeUser((user, done) => {
   console.log('Serializing user:', user.id);
