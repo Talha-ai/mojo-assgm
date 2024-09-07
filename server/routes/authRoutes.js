@@ -17,27 +17,6 @@ router.get("/login/success", (req, res) => {
   }
 });
 
-// router.get("/login/success", async (req, res) => {
-//   try {
-
-//     const user = await User.findOne({ verified: true });
-
-//     if (user) {
-//       res.status(200).json({
-//         message: "Successfully logged in",
-//         user: user,
-//       });
-//     } else {
-//       res.status(401).json({
-//         message: "Authentication failed or user not verified",
-//       });
-//     }
-//   } catch (error) {
-//     res.status(500).json({ message: "Server error", error: error.message });
-//   }
-// });
-
-
 router.get("/login/failed", (req, res, error) => {
   res.status(401).json({
     success: false,
@@ -66,7 +45,7 @@ router.get(
   "/facebook/callback",
   passport.authenticate("facebook", {
     failureRedirect: "/login/failed",
-    successRedirect: "http://localhost:5173",
+    successRedirect: process.env.CLIENT_URL,
   }),
 );
 
